@@ -1,11 +1,43 @@
 {% extends 'base.html' %}
 {% block title %} Рассылка писем {% endblock %}
 
+{% block extracss %}
+{% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link href="{% static 'bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+{{ form.media }}
+{% endblock %}
+
 {% block content %}
-<div class="container">
+{% load user_filters %}
 
-    <h1></h1>
-
-</div>
+<div class="row justify-content-center">
+    <div class="col-md-12 p-5">
+        <div class="card">
+            <div class="card-header">
+                Рассылка писем
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group row">
+                        <label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.label }}</label>
+                        <div class="col-md-10" {% if field.help_text %} title="{{ field.help_text }}" {% endif %}>
+                            {{ field|addclass:"form-control" }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="col-md-6 offset-md-2">
+                        <button type="submit" class="btn btn-primary">
+                            Разослать
+                        </button>
+                    </div>
+                </form>
+            </div> <!-- card body -->
+        </div> <!-- card -->
+    </div> <!-- col -->
+</div> <!-- row -->
 
 {% endblock %}

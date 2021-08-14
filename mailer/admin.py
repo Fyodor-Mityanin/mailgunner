@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Email, SentMail
+from .models import Email, SentEmail, EmailTemplate
+
 
 class EmailAdmin(admin.ModelAdmin):
     """Админка для базы e-mail"""
@@ -14,10 +15,13 @@ class EmailAdmin(admin.ModelAdmin):
     list_filter = ('birth_date',)
     empty_value_display = '-пусто-'
 
-class SentMailAdmin(admin.ModelAdmin):
+
+class SentEmailAdmin(admin.ModelAdmin):
     """Админка для отправленных e-mail"""
     list_display = (
+        'pk',
         'email',
+        'template',
         'send_date',
         'is_read',
     )
@@ -25,5 +29,16 @@ class SentMailAdmin(admin.ModelAdmin):
     list_filter = ('send_date',)
     empty_value_display = '-пусто-'
 
+
+class EmailTemplateAdmin(admin.ModelAdmin):
+    """Админка для базы шаблонов e-mail"""
+    list_display = (
+        'title',
+        'subject',
+        'link',
+    )
+
+
 admin.site.register(Email, EmailAdmin)
-admin.site.register(SentMail, SentMailAdmin)
+admin.site.register(SentEmail, SentEmailAdmin)
+admin.site.register(EmailTemplate, EmailTemplateAdmin)
