@@ -1,10 +1,10 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import FormView
 
-from .forms import CreationForm
+from .forms import LoginForm
 
 
-class SignUp(CreateView):
-    form_class = CreationForm
+class Login(FormView):
+    form_class = LoginForm
     success_url = reverse_lazy('mailer:index')
     template_name = 'users/login.html'

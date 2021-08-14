@@ -25,7 +25,7 @@
           </div>
         {% endif %}
 
-        <form method="post" action="{% url 'login' %}">
+        <form method="post" action="{% url 'users:login' %}">
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next }}">
           <div class="form-group row">
@@ -46,9 +46,6 @@
               <button type="submit" class="btn btn-primary">
                 Войти
               </button>
-              <a href="{% url 'password_reset' %}" class="btn btn-link">
-                Забыли пароль?
-              </a>
           </div>
         </form>
       </div> <!-- card body -->

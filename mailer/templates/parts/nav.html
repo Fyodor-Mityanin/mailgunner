@@ -2,13 +2,12 @@
     <a class="navbar-brand" href="{% url 'mailer:index' %}"><span style="color:red">Mail</span>Gunner</a>
     <nav class="my-2 my-md-0 mr-md-3">
         {% if user.is_authenticated %}
-        <a class="navbar-brand" href=""><span style="color:brown">Новая запись</span></a>
+        <a class="navbar-brand" href=""><span style="color:brown">Рассылка писем</span></a>
+        <a class="navbar-brand" href=""><span style="color:brown">Отправленные письма</span></a>
         Пользователь: {{ user.username }}
-        <a class="p-2 text-dark" href="">Изменить пароль</a>
-        <a class="p-2 text-dark" href="">Выйти</a>
+        <a class="p-2 text-dark" href="{% url 'users:logout' %}">Выйти</a>
         {% else %}
-        <a class="p-2 text-dark" href="">Войти</a> |
-        <a class="p-2 text-dark" href="">Регистрация</a>
+        <a class="p-2 text-dark" href="">Войти</a>
         {% endif %}
     </nav>
 </nav>
