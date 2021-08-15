@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Email, SentEmail, EmailTemplate
+from .models import Email, EmailTemplate, SentEmail
 
 
 class EmailAdmin(admin.ModelAdmin):

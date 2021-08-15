@@ -1,65 +1,52 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template import loader
-from django.core import mail
-from .forms import SentEmailForm
-from .models import Email, SentEmail
 import os
-from django.core.paginator import Paginator
 
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from dotenv import load_dotenv
+
+from .forms import EmailForm, SentEmailForm
+from .models import Email, SentEmail
+from .tasks import send_emails
 
 load_dotenv()
 
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 
 
-def get_html_emails(template):
-    emails = Email.objects.all()
-    email_objects = []
-    for email in emails:
-        subject, from_email, to = template.subject, EMAIL_HOST_USER, email.email
-        t = loader.get_template(template.link)
-        data = {'name': email.name,
-                'surname': email.surname,
-                'birth_date': email.birth_date,
-                }
-        html_content = t.render(data)
-        msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
-        msg.content_subtype = 'html'
-        email_objects.append(msg)
-    return email_objects
-
-
-def create_sent_emails(messages, template):
-    objs = [
-        SentEmail(
-            email=Email.objects.get(email=email.to[0]),
-            template=template,
-        )
-        for email in messages
-    ]
-    SentEmail.objects.bulk_create(objs)
-
-
 @login_required
 def index(request):
     form = SentEmailForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        template = form.instance.template
-        connection = mail.get_connection()
-        messages = get_html_emails(template)
-        connection.send_messages(messages)
-        create_sent_emails(messages, template)
+        template_id = form.instance.template.pk
+        time = form.cleaned_data['time_of_sending']
+        send_emails(template_id, time)
         return redirect('mailer:index')
     return render(request, 'index.html', {'form': form, })
 
 
 @login_required
+def emails(request):
+    form = EmailForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('mailer:emails')
+    emails_list = Email.objects.all()
+    paginator = Paginator(emails_list, 30)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request,
+        'emails.html',
+        {'page': page, 'paginator': paginator, 'form': form, }
+    )
+
+
+@login_required
 def sent_emails(request):
     sent_emails_list = SentEmail.objects.all()
-    paginator = Paginator(sent_emails_list, 100)
+    paginator = Paginator(sent_emails_list, 30)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
@@ -67,3 +54,12 @@ def sent_emails(request):
         'sent_emails.html',
         {'page': page, 'paginator': paginator}
     )
+
+
+def tracking(request, pk):
+    dir = os.path.dirname(os.path.abspath(__file__))
+    image = open(os.path.join(dir, 'static/pixel.png'), 'rb').read()
+    email = SentEmail.objects.get(pk=pk)
+    email.is_read = True
+    email.save()
+    return HttpResponse(image, content_type="image/png")

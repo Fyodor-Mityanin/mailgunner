@@ -1,6 +1,8 @@
-from django.forms import ModelForm, DateTimeField, TextInput, DateTimeInput, Form
 from datetimewidget.widgets import DateTimeWidget
-from .models import SentEmail
+from django.forms import (DateTimeField, DateTimeInput, Form, ModelForm,
+                          TextInput)
+
+from .models import Email, SentEmail
 
 
 class SentEmailForm(ModelForm):
@@ -19,3 +21,8 @@ class SentEmailForm(ModelForm):
         fields = (
             'template',
         )
+
+class EmailForm(ModelForm):
+    class Meta:
+        model = Email
+        fields = '__all__'

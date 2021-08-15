@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}База адресов{% endblock %}
+
+{% block content %}
+{% load user_filters %}
+
+<div class="row justify-content-center">
+    <div class="col-md-12 p-5">
+        <div class="card">
+            <div class="card-header">
+                Добавление нового адреса
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group row">
+                        <label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.label }}</label>
+                        <div class="col-md-10" {% if field.help_text %} title="{{ field.help_text }}" {% endif %}>
+                            {{ field|addclass:"form-control" }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="col-md-6 offset-md-2">
+                        <button type="submit" class="btn btn-primary">
+                            Добавить
+                        </button>
+                    </div>
+                </form>
+            </div> <!-- card body -->
+        </div> <!-- card -->
+    </div> <!-- col -->
+</div> <!-- row -->
+
+{% for email in page %}
+<div class="card mb-3 mt-1 shadow-sm">
+    <div class="card-body">
+        <p class="card-text">
+            <strong class="d-block text-gray-dark">{{ email.email }}</strong>
+            {{ email.name }} {{ email.surname }} - {{ email.birth_date }}
+        </p>
+    </div>
+</div>
+{% endfor %}
+
+{% if page.has_other_pages %}
+{% include "parts/paginator.html" with items=page paginator=paginator%}
+{% endif %}
+
+{% endblock %}

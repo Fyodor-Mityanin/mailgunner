@@ -7,17 +7,17 @@ class Email(models.Model):
         unique=True,
     )
     name = models.CharField(
-        'Имя адресата',
+        'Имя',
         max_length=20,
         blank=True
     )
     surname = models.CharField(
-        'Фамилия адресата',
+        'Фамилия',
         max_length=20,
         blank=True
     )
     birth_date = models.DateField(
-        'День рождения адресата',
+        'День рождения',
         blank=True
     )
 
@@ -77,6 +77,7 @@ class SentEmail(models.Model):
     class Meta:
         verbose_name = 'Отправленное письмо'
         verbose_name_plural = 'Отправленные письма'
+        ordering = ['-send_date']
 
     def __str__(self):
         email = self.email

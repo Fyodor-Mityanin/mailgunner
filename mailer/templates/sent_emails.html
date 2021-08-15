@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Отправленные письма {% endblock %}
+{% block title %}Отправленные письма{% endblock %}
 
 {% block content %}
 {% load user_filters %}
@@ -9,11 +9,15 @@
 <div class="card mb-3 mt-1 shadow-sm">
     <div class="card-body">
         <p class="card-text">
-            <strong class="d-block text-gray-dark">{{ email.email }}</strong>
+            <strong class="d-block text-gray-dark">{{ email.pk }} - {{ email.email }}</strong>
             Шаблон: {{ email.template }} Время отправки: {{ email.send_date }}
-            <span style="color:{{ email.is_read|yesno:'Green,Red' }}">
-                {{ email.is_read|yesno:"Прочитано,Не прочитано" }}
-            </span>
+            {% if email.is_read %}
+            <span style="color:Green">Прочитано</span>
+            {% else %}
+            <span style="color:Red">Не прочитано</span>
+            {% endif %}
+
+
         </p>
     </div>
 </div>
