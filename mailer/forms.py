@@ -1,6 +1,5 @@
 from datetimewidget.widgets import DateTimeWidget
-from django.forms import (DateTimeField, DateTimeInput, Form, ModelForm,
-                          TextInput)
+from django.forms import (DateTimeField, ModelForm, ModelMultipleChoiceField)
 
 from .models import Email, SentEmail
 
@@ -9,7 +8,7 @@ class SentEmailForm(ModelForm):
     time_of_sending = DateTimeField(
         label='Время отправки',
         widget=DateTimeWidget(
-            attrs={'id':'id'},
+            attrs={'id': 'id'},
             usel10n=True,
             bootstrap_version=3
         ),
@@ -21,6 +20,7 @@ class SentEmailForm(ModelForm):
         fields = (
             'template',
         )
+
 
 class EmailForm(ModelForm):
     class Meta:

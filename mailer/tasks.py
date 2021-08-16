@@ -1,5 +1,7 @@
 import os
 from time import sleep
+from datetime import datetime
+from django.utils import timezone
 
 from celery import shared_task
 from django.core import mail
@@ -39,13 +41,20 @@ def create_sent_email(email, template):
     sent_email.save()
     return sent_email.pk
 
+def get_time_delta(time):
+    now = timezone.now()
+    time_delta = time - now
+    return time_delta.total_seconds()
 
 @shared_task
 def send_emails(template_id, time=None):
     template = EmailTemplate.objects.get(id=template_id)
     if time is not None:
-        sleep(30)
-        print('We slept 30 sec')
+        print(f'Время сейчас {timezone.now()}')
+        print(f'Время отправки {time}')
+        time_delta = get_time_delta(time)
+        print(f'Отправление через {time_delta}')
+        sleep(time_delta)
     connection = mail.get_connection()
     try:
         messages = get_html_emails(template)
