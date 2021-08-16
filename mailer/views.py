@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -64,7 +65,7 @@ def sent_emails(request):
 
 
 def tracking(request, pk):
-    dir = os.path.dirname(os.path.abspath(__file__))
+    dir = Path(__file__).resolve().parent
     image = open(os.path.join(dir, 'static/pixel.png'), 'rb').read()
     email = SentEmail.objects.get(pk=pk)
     email.is_read = True
