@@ -1,5 +1,5 @@
 from datetimewidget.widgets import DateTimeWidget
-from django.forms import (DateTimeField, ModelForm, ModelMultipleChoiceField)
+from django.forms import DateTimeField, ModelForm
 
 from .models import Email, SentEmail
 

@@ -1,15 +1,14 @@
 import os
 from time import sleep
-from datetime import datetime
-from django.utils import timezone
 
 from celery import shared_task
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
+from django.utils import timezone
 from dotenv import load_dotenv
 
-from .models import Email, SentEmail, EmailTemplate
+from .models import Email, EmailTemplate, SentEmail
 
 load_dotenv()
 
@@ -41,10 +40,12 @@ def create_sent_email(email, template):
     sent_email.save()
     return sent_email.pk
 
+
 def get_time_delta(time):
     now = timezone.now()
     time_delta = time - now
     return time_delta.total_seconds()
+
 
 @shared_task
 def send_emails(template_id, time=None):

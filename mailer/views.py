@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from dotenv import load_dotenv
-from django.urls import reverse
+from PIL import Image
 
 from .forms import EmailForm, SentEmailForm
 from .models import Email, EmailTemplate, SentEmail
@@ -14,6 +14,7 @@ from .tasks import send_emails
 load_dotenv()
 
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+
 
 def get_message_text(time=None):
     if time is None:
@@ -64,12 +65,14 @@ def sent_emails(request):
 
 
 def tracking(request, pk):
-    dir = os.path.dirname(os.path.abspath(__file__))
-    image = open(os.path.join(dir, 'static/pixel.png'), 'rb').read()
+    image = Image.new('RGB', (1, 1))
+    response = HttpResponse(content_type="image/png")
+    image.save(response, "PNG")
     email = SentEmail.objects.get(pk=pk)
     email.is_read = True
     email.save()
     return HttpResponse(image, content_type="image/png")
+
 
 @login_required
 def templates(request):
