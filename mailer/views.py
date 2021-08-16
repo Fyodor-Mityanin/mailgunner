@@ -5,7 +5,6 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from dotenv import load_dotenv
-from PIL import Image
 
 from .forms import EmailForm, SentEmailForm
 from .models import Email, EmailTemplate, SentEmail
@@ -65,9 +64,8 @@ def sent_emails(request):
 
 
 def tracking(request, pk):
-    image = Image.new('RGB', (1, 1))
-    response = HttpResponse(content_type="image/png")
-    image.save(response, "PNG")
+    dir = os.path.dirname(os.path.abspath(__file__))
+    image = open(os.path.join(dir, 'static/pixel.png'), 'rb').read()
     email = SentEmail.objects.get(pk=pk)
     email.is_read = True
     email.save()
