@@ -66,7 +66,7 @@ def sent_emails(request):
 
 def tracking(request, pk):
     dir = Path(__file__).resolve().parent
-    image = open(os.path.join(dir, 'static/pixel.png'), 'rb').read()
+    image = open(os.path.join(dir, 'static/pixel.PNG'), 'rb').read()
     email = SentEmail.objects.get(pk=pk)
     email.is_read = True
     email.save()
