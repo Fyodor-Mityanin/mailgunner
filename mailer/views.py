@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from django.urls import reverse
 
 from .forms import EmailForm, SentEmailForm
-from .models import Email, SentEmail
+from .models import Email, EmailTemplate, SentEmail
 from .tasks import send_emails
 
 load_dotenv()
@@ -72,5 +72,6 @@ def tracking(request, pk):
     return HttpResponse(image, content_type="image/png")
 
 @login_required
-def message(request):
-    return render(request, 'message.html')
+def templates(request):
+    templates = EmailTemplate.objects.all()
+    return render(request, 'templates.html', {'templates': templates})

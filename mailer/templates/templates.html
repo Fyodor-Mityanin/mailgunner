@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}База адресов{% endblock %}
+
+{% block content %}
+{% load user_filters %}
+
+{% for template in templates %}
+<div class="card mb-3 mt-1 shadow-sm">
+    <div class="card-body">
+        <p class="card-text">
+            <strong class="d-block text-gray-dark">{{ template.title }}</strong>
+            <strong class="d-block text-gray-dark">Subject: {{ template.subject }}</strong>
+            {% with template.link as link %}
+            {% include link with sent_email_pk=112 name='Иван' surname='Иванов' birth_date='01.01.1990' %}
+            {% endwith %}
+        </p>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

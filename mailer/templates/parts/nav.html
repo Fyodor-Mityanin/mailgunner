@@ -5,6 +5,7 @@
         <a class="navbar-brand" href="{% url 'mailer:index' %}"><span style="color:brown">Рассылка писем</span></a>
         <a class="navbar-brand" href="{% url 'mailer:emails' %}"><span style="color:brown">База адресов</span></a>
         <a class="navbar-brand" href="{% url 'mailer:sent_emails' %}"><span style="color:brown">Отправленные письма</span></a>
+        <a class="navbar-brand" href="{% url 'mailer:templates' %}"><span style="color:brown">Шаблоны писем</span></a>
         Пользователь: {{ user.username }}
         <a class="p-2 text-dark" href="{% url 'users:logout' %}">Выйти</a>
         {% else %}
